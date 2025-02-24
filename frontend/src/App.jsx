@@ -1,14 +1,13 @@
-// src/App.jsx
-
+import React from "react";
 import "./App.css";
-import Chat from "./components/Chat/Chat.jsx";
-const App = () => {
+import Chat from "./components/Chat/Chat";
+
+function App() {
   return (
-    <>
-      <h1>Hello world!</h1>;
-      <Chat />;
-    </>
+    <div className="app">
+      <Chat />
+    </div>
   );
-};
+}
 
 export default App;

@@ -1,51 +1,88 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './Chat.css';  // Correct path for the CSS file within the same directory
+import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import "./Chat.css";
 
 const Chat = () => {
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [userInput, setUserInput] = useState("");
+  const [fileInput, setFileInput] = useState([]);
+  const [messages, setMessages] = useState([]); // State to store messages
+
+  const appendMessage = (text, sender) => {
+    setMessages((prev) => [...prev, { text, sender }]);
+  };
 
   const sendMessage = async () => {
-    const formData = new FormData();
-    formData.append('message', input);
-    const files = document.getElementById("fileInput").files;
-    for (let i = 0; i < files.length; i++) {
-      formData.append("images", files[i]);
+    if (!userInput && fileInput.length === 0) {
+      console.log("No input provided!");
+      return;
     }
 
-    try {
-      const response = await axios.post('http://localhost:3000/chat', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+    appendMessage(userInput, "user"); // Display user message in chat
+
+    const formData = {
+      message: userInput,
+      images: [],
+    };
+
+    // ✅ Process all selected images
+    if (fileInput.length > 0) {
+      const imagePromises = Array.from(fileInput).map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+        });
       });
-      // Assuming the server responds with the message and any image URLs
-      setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: response.data.reply }]);
-    } catch (error) {
-      console.error('Error:', error);
-      setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: 'Error connecting to server.' }]);
+
+      formData.images = await Promise.all(imagePromises); // ✅ Read all images asynchronously
     }
-    setInput(''); // Clear input after sending
+
+    await sendRequest(formData);
+    setUserInput(""); // Reset input after sending
+    setFileInput([]); // Reset file input
+  };
+
+  const sendRequest = async (formData) => {
+    try {
+      const response = await fetch("http://localhost:3000/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      appendMessage(data.reply, "bot"); // Display bot's response in chat
+    } catch (error) {
+      console.error("Error:", error);
+      appendMessage("Error connecting to server.", "bot");
+    }
   };
 
   return (
     <div className="chat-container">
-      <div className="chat-box">
+      <div className="chat-box" id="chatBox">
         {messages.map((msg, index) => (
-          <div key={index} className={`chat-message ${msg.sender}`}>
-            {msg.text}
+          <div key={index} className={`chat-message ${msg.sender}-message`}>
+            <ReactMarkdown>{msg.text}</ReactMarkdown>
           </div>
         ))}
       </div>
+
       <div className="chat-input-container">
         <input
           type="text"
-          value={input}
-          onChange={e => setInput(e.target.value)}
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
           placeholder="Type a message..."
+          onKeyPress={(e) => e.key === "Enter" && sendMessage()}
         />
-        <input id="fileInput" type="file" multiple accept="image/*" />
+        <input
+          type="file"
+          onChange={(e) => setFileInput(e.target.files)}
+          multiple
+          accept="image/*"
+        />
         <button onClick={sendMessage}>Send</button>
       </div>
     </div>
