@@ -12,8 +12,16 @@ app.use(express.json({ limit: "100mb" })); // ✅ Allow large images in base64
 
 // API Route to communicate with ChatGPT
 app.post("/chat", async (req, res) => {
-  const defaultMessage =
-    "You are a market researcher. Analyse these images using semiotics and provide the emergent trends.";
+  const defaultMessage = `
+  You are a market research expert specialising in semiotics and emergent cultural trends. Your task is to analyse the uploaded image(s) using best practices in semiotic analysis, Your analysis must be structured strictly within the following five parameters:
+  I want 4 points written around each of the five parameters, each with a bold paragraph subheader and paragraph text.
+  ## Identity & Demographic, I want themes written around Identity & Demographic identifed the image
+  ## Core Signifiers & Themes, I want themes written around Core Signifiers & Themes identifed the image
+  ## Social & Cultural Codes, I want themes written around Social & Cultural Codes identifed the image
+  ## Symbolism & Codes, I want themes written around Symbolism & Codes identifed the image
+  ## Trend Signals & Future Implications  
+  Each of these five parameters should be formatted in H4, and the rest should be in paragraphs and lists, after each of the six perimeter there should be a horizontal line break.
+`;
   const userMessage = req.body.message
     ? `${defaultMessage} ${req.body.message}`
     : defaultMessage;

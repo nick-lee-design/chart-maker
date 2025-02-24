@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import Chat from "./components/Chat/Chat";
+import ChatContainer from "./components/ChatContainer/ChatContainer";
 
 function App() {
   return (
     <div className="app">
-      <Chat />
+      <ChatContainer />
     </div>
   );
 }

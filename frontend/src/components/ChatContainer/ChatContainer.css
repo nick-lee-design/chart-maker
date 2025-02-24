@@ -1,0 +1,32 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  margin: auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: rgb(32, 32, 32);
+}
+
+.chat-box {
+  height: 600px;
+  overflow-y: auto;
+  padding: 8px;
+  background: rgb(35, 35, 35);
+}
+
+.chat-message {
+  padding: 8px;
+  margin: 4px;
+  border-radius: 4px;
+}
+
+.user-message {
+  background: #2c2c2c;
+  align-self: flex-end;
+}
+
+.bot-message {
+  background: #353535;
+  align-self: flex-start;
+}

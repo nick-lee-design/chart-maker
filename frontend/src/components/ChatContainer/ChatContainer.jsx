@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import "./Chat.css";
+import ChatBox from "../ChatBox/ChatBox";
+import ChatInput from "../ChatInput/ChatInput";
+import "./ChatContainer.css";
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -60,32 +61,17 @@ const Chat = () => {
   };
 
   return (
-    <div className="chat-container">
-      <div className="chat-box" id="chatBox">
-        {messages.map((msg, index) => (
-          <div key={index} className={`chat-message ${msg.sender}-message`}>
-            <ReactMarkdown>{msg.text}</ReactMarkdown>
-          </div>
-        ))}
-      </div>
-
-      <div className="chat-input-container">
-        <input
-          type="text"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Type a message..."
-          onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+    <>
+      <div className="chat-container">
+        <ChatInput
+          userInput={userInput}
+          setUserInput={setUserInput}
+          setFileInput={setFileInput}
+          sendMessage={sendMessage}
         />
-        <input
-          type="file"
-          onChange={(e) => setFileInput(e.target.files)}
-          multiple
-          accept="image/*"
-        />
-        <button onClick={sendMessage}>Send</button>
+        <ChatBox messages={messages} />
       </div>
-    </div>
+    </>
   );
 };
 
