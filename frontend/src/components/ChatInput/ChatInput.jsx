@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./ChatInput.css";
 import Button from "@mui/material/Button";
 
-
 const ChatInput = ({ userInput, setUserInput, setFileInput, sendMessage }) => {
   const [fileCount, setFileCount] = useState(0);
 
@@ -28,16 +27,16 @@ const ChatInput = ({ userInput, setUserInput, setFileInput, sendMessage }) => {
         id="fileUpload"
         onChange={handleFileChange}
         multiple
-        accept="image/*"
+        accept="image/*,.csv"
         hidden
       />
 
       {/* Upload Button with File Count */}
       <label htmlFor="fileUpload" className="upload-button">
-        📎 Upload {fileCount > 0 && `(${fileCount})`}
+        Upload Files {fileCount > 0 && `(${fileCount})`}
       </label>
 
-      <button onClick={sendMessage}>Send</button>
+      <button onClick={sendMessage}>Generate Report</button>
     </div>
   );
 };

@@ -2,35 +2,68 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = 3000;
 
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
+
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: "100mb" })); // ✅ Allow large images in base64
+app.use(express.json({ limit: "100mb" }));
+
+// Ensure uploads directory exists
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
+// File upload endpoint
+app.post("/upload", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  // Read the CSV file content
+  const fileContent = fs.readFileSync(req.file.path, "utf-8");
+  res.json({
+    filename: req.file.filename,
+    content: fileContent,
+  });
+});
 
 // API Route to communicate with ChatGPT
 app.post("/chat", async (req, res) => {
   const defaultMessage = `
-  You are a market research expert specialising in semiotics and emergent cultural trends. Your task is to analyse the uploaded image(s) using best practices in semiotic analysis, Your analysis must be structured strictly within the following five parameters:
-  I want 4 points written around each of the five parameters, each with a bold paragraph subheader and paragraph text.
-  ## Identity & Demographic, I want themes written around Identity & Demographic identifed the image
-  ## Core Signifiers & Themes, I want themes written around Core Signifiers & Themes identifed the image
-  ## Social & Cultural Codes, I want themes written around Social & Cultural Codes identifed the image
-  ## Symbolism & Codes, I want themes written around Symbolism & Codes identifed the image
-  ## Trend Signals & Future Implications  
-  Each of these five parameters should be formatted in H4, and the rest should be in paragraphs and lists, after each of the six perimeter there should be a horizontal line break.
+You are a data visualization expert. Analyze the CSV data and create a chart based on the user's requirements. 
+            Return a JavaScript code snippet that uses Chart.js to create the visualization. The code should be ready to run in a browser.
+            Format your response as JSON with two fields: chartCode (the JavaScript code) and explanation (your analysis).
+            The chartCode should include the necessary Chart.js initialization and configuration.
+            Make sure to use the correct canvas ID format: 'chart-{index}' where index is the message index.
 `;
   const userMessage = req.body.message
     ? `${defaultMessage} ${req.body.message}`
     : defaultMessage;
   const images = req.body.images || [];
+  const csvData = req.body.csvData || [];
 
   console.log("Received user message:", userMessage);
   console.log("Received images count:", images.length);
+  console.log("Received CSV data count:", csvData.length);
 
-  // ✅ Structure message correctly to send multiple images
+  // Structure message correctly to send multiple images and CSV data
   let messages = [
     {
       role: "user",
@@ -38,22 +71,31 @@ app.post("/chat", async (req, res) => {
     },
   ];
 
-  // ✅ Append each image as a separate entry in the content array
+  // Append each image as a separate entry in the content array
   images.forEach((image) => {
+    if (image.startsWith("data:image/")) {
+      messages[0].content.push({
+        type: "image_url",
+        image_url: { url: image },
+      });
+    }
+  });
+
+  // Append CSV data as text
+  csvData.forEach((csv) => {
     messages[0].content.push({
-      type: "image_url",
-      image_url: { url: image },
+      type: "text",
+      text: `CSV Data:\n${csv}`,
     });
   });
 
-  //-----------------------------------
   try {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4o", // ✅ Updated to gpt-4o
+        model: "gpt-4o",
         messages: messages,
-        max_tokens: 500,
+        max_tokens: 5000,
       },
       {
         headers: {

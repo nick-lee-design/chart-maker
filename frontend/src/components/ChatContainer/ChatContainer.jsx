@@ -23,19 +23,48 @@ const Chat = () => {
     const formData = {
       message: userInput,
       images: [],
+      csvData: [],
     };
 
-    // ✅ Process all selected images
+    // Process all selected files
     if (fileInput.length > 0) {
-      const imagePromises = Array.from(fileInput).map((file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-        });
+      const filePromises = Array.from(fileInput).map(async (file) => {
+        if (file.type.startsWith("image/")) {
+          // Handle images
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+          });
+        } else if (file.type === "text/csv") {
+          // Handle CSV files
+          const uploadFormData = new FormData();
+          uploadFormData.append("file", file);
+
+          try {
+            const response = await fetch("http://localhost:3000/upload", {
+              method: "POST",
+              body: uploadFormData,
+            });
+            const data = await response.json();
+            return data.content; // Return the CSV content
+          } catch (error) {
+            console.error("Error uploading CSV:", error);
+            return null;
+          }
+        }
       });
 
-      formData.images = await Promise.all(imagePromises); // ✅ Read all images asynchronously
+      const results = await Promise.all(filePromises);
+
+      // Separate images and CSV data
+      results.forEach((result) => {
+        if (result && result.startsWith("data:image/")) {
+          formData.images.push(result);
+        } else if (result) {
+          formData.csvData.push(result);
+        }
+      });
     }
 
     await sendRequest(formData);
