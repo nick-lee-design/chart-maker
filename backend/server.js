@@ -52,8 +52,13 @@ Return a JavaScript code snippet that uses Chart.js to create the visualization.
 Important notes
 id of the chart is myChart when you create the chart
 Labels must not have more than 25 characters in one line, forEach label if there is more than 25 characters, trim to next line, this ensures text is never displayed diagonally or overlapping.
-
-
+Automatically selects the best visualization (stacked column, stacked bar, clustered column, or clustered bar) for optimal data readability.
+Colors & Aesthetics
+#89D2DC (Light Blue)
+#0F7173 (Teal)
+#6564DB (Indigo)
+#272932 (Dark Grey)
+#D8A47F (Warm Beige)
 `;
   const userMessage = req.body.message
     ? `${defaultMessage} ${req.body.message}`
