@@ -49,6 +49,11 @@ app.post("/chat", async (req, res) => {
   const defaultMessage = `
 You are a data visualization expert. Analyze the CSV data and create a chart based on the user's requirements. 
 Return a JavaScript code snippet that uses Chart.js to create the visualization. The code should be ready to run in a browser.
+Important notes
+id of the chart is myChart when you create the chart
+Labels must not have more than 25 characters in one line, forEach label if there is more than 25 characters, trim to next line, this ensures text is never displayed diagonally or overlapping.
+
+
 `;
   const userMessage = req.body.message
     ? `${defaultMessage} ${req.body.message}`

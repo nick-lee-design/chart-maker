@@ -30,69 +30,7 @@
   display: flex;
   gap: 20px;
   width: 100%;
-}
-
-.explanation-section {
-  flex: 1;
-  min-width: 0;
-  padding-right: 20px;
-  border-right: 1px solid #444;
-  overflow-wrap: break-word;
-}
-
-.code-section {
-  width: 50%;
-  min-width: 400px;
-  background: #1a1a1a;
-  border-radius: 6px;
-  padding: 20px;
-  border: 1px solid #444;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  flex-shrink: 0;
-}
-
-.code-block {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-.code-block code {
-  font-family: "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
-  font-size: 14px;
-  color: #e0e0e0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  display: block;
-  line-height: 1.6;
-  tab-size: 2;
-  -moz-tab-size: 2;
-  overflow-x: auto;
-}
-
-/* Syntax highlighting */
-.code-block code .keyword {
-  color: #569cd6;
-}
-.code-block code .string {
-  color: #ce9178;
-}
-.code-block code .number {
-  color: #b5cea8;
-}
-.code-block code .comment {
-  color: #6a9955;
-}
-.code-block code .function {
-  color: #dcdcaa;
-}
-.code-block code .operator {
-  color: #d4d4d4;
-}
-.code-block code .property {
-  color: #9cdcfe;
+  flex-wrap: wrap;
 }
 
 /* Scrollbar styling */
