@@ -9,23 +9,35 @@
   padding: 15px;
   margin: 8px;
   border-radius: 8px;
-  max-width: 90%;
+  width: 100%;
   display: flex;
-  gap: 20px;
+  flex-direction: column;
 }
 
 .user-message {
   background: #2c2c2c;
   margin-left: auto;
+  max-width: 100%;
 }
 
 .bot-message {
   background: #353535;
   margin-right: auto;
+  max-width: 100%;
 }
 
-.message-content {
+.message-layout {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.explanation-section {
   flex: 1;
+  min-width: 0;
+  padding-right: 20px;
+  border-right: 1px solid #444;
+  overflow-wrap: break-word;
 }
 
 .code-section {
@@ -36,6 +48,7 @@
   padding: 20px;
   border: 1px solid #444;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .code-block {
