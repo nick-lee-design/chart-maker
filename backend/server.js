@@ -48,10 +48,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
 app.post("/chat", async (req, res) => {
   const defaultMessage = `
 You are a data visualization expert. Analyze the CSV data and create a chart based on the user's requirements. 
-            Return a JavaScript code snippet that uses Chart.js to create the visualization. The code should be ready to run in a browser.
-            Format your response as JSON with two fields: chartCode (the JavaScript code) and explanation (your analysis).
-            The chartCode should include the necessary Chart.js initialization and configuration.
-            Make sure to use the correct canvas ID format: 'chart-{index}' where index is the message index.
+Return a JavaScript code snippet that uses Chart.js to create the visualization. The code should be ready to run in a browser.
 `;
   const userMessage = req.body.message
     ? `${defaultMessage} ${req.body.message}`

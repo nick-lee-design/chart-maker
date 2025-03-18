@@ -1,0 +1,101 @@
+.chat-box {
+  height: 600px;
+  overflow-y: auto;
+  padding: 8px;
+  background: rgb(35, 35, 35);
+}
+
+.chat-message {
+  padding: 15px;
+  margin: 8px;
+  border-radius: 8px;
+  max-width: 90%;
+  display: flex;
+  gap: 20px;
+}
+
+.user-message {
+  background: #2c2c2c;
+  margin-left: auto;
+}
+
+.bot-message {
+  background: #353535;
+  margin-right: auto;
+}
+
+.message-content {
+  flex: 1;
+}
+
+.code-section {
+  width: 50%;
+  min-width: 400px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  padding: 20px;
+  border: 1px solid #444;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.code-block {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.code-block code {
+  font-family: "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 14px;
+  color: #e0e0e0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  display: block;
+  line-height: 1.6;
+  tab-size: 2;
+  -moz-tab-size: 2;
+  overflow-x: auto;
+}
+
+/* Syntax highlighting */
+.code-block code .keyword {
+  color: #569cd6;
+}
+.code-block code .string {
+  color: #ce9178;
+}
+.code-block code .number {
+  color: #b5cea8;
+}
+.code-block code .comment {
+  color: #6a9955;
+}
+.code-block code .function {
+  color: #dcdcaa;
+}
+.code-block code .operator {
+  color: #d4d4d4;
+}
+.code-block code .property {
+  color: #9cdcfe;
+}
+
+/* Scrollbar styling */
+.chat-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+  background: #2c2c2c;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
